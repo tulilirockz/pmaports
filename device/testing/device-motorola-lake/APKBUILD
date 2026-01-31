@@ -1,0 +1,36 @@
+# Reference: <https://postmarketos.org/devicepkg>
+maintainer="Tulip Blossom <tulilirockz@outlook.com>"
+pkgname=device-motorola-lake
+pkgdesc="Motorola Moto G7 Plus"
+pkgver=1
+pkgrel=2
+url="https://postmarketos.org"
+license="MIT"
+arch="aarch64"
+options="!check !archcheck"
+depends="
+	linux-postmarketos-qcom-sdm660
+	mkbootimg
+	postmarketos-base
+	msm-firmware-loader
+	soc-qcom-sdm660
+	soc-qcom-sdm660-rproc
+"
+makedepends="devicepkg-dev"
+source="
+	deviceinfo
+	modules-initfs
+"
+
+build() {
+	devicepkg_build $startdir $pkgname
+}
+
+package() {
+	devicepkg_package $startdir $pkgname
+}
+
+sha512sums="
+c0320d25594d57d40f982df6241aebe7cda1d3bf5223c08b765d25c6deaf95f57bebd9f0e399fd2bc2cbb1120ab65449c4e0274d21404686e90e00e651223af7  deviceinfo
+e57cd0ba1f95f87dda67f0b9c0cad951df1663f115ed65c999ffd3c5c4f2db3dea152f4ea86a3f7a0a6ad4958697551b4c94a2c7850568e0f5814703c921577c  modules-initfs
+"
