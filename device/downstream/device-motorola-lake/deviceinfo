@@ -1,0 +1,29 @@
+# Reference: <https://postmarketos.org/deviceinfo>
+# Please use double quotes only. You can source this file in shell
+# scripts.
+
+deviceinfo_format_version="0"
+deviceinfo_name="Motorola Moto G7 Plus"
+deviceinfo_manufacturer="Motorola"
+deviceinfo_codename="motorola-lake"
+deviceinfo_year="2019"
+deviceinfo_dtb="qcom/sdm636-lake"
+deviceinfo_arch="aarch64"
+
+# Device related
+deviceinfo_chassis="handset"
+# deviceinfo_drm="true"
+deviceinfo_external_storage="true"
+
+# Bootloader related
+deviceinfo_flash_method="fastboot"
+deviceinfo_kernel_cmdline="androidboot.hardware=qcom ehci-hcd.park=3 lpm_levels.sleep_disabled=1 service_locator.enable=1 swiotlb=2048 androidboot.configfs=true sched_enable_hmp=1 sched_enable_power_aware=1 androidboot.usbcontroller=a800000.dwc3 loop.max_part=7 androidboot.veritymode=eio androidboot.boot_devices=soc/c0c4000.sdhci"
+deviceinfo_generate_bootimg="true"
+deviceinfo_flash_pagesize="4096"
+deviceinfo_bootimg_qcdt="false"
+deviceinfo_header_version="1"
+deviceinfo_flash_offset_base="0x00000000"
+deviceinfo_flash_offset_kernel="0x00008000"
+deviceinfo_flash_offset_ramdisk="0x01000000"
+deviceinfo_flash_offset_second="0x00000000"
+deviceinfo_flash_offset_tags="0x00000100"

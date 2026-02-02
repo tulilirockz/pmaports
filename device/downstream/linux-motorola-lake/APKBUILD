@@ -1,0 +1,74 @@
+# Reference: <https://postmarketos.org/vendorkernel>
+# Kernel config based on: arch/arm64/configs/(CHANGEME!)
+
+maintainer=""
+pkgname=linux-motorola-lake
+pkgver=4.4.1
+pkgrel=0
+pkgdesc="Motorola Moto G7 Plus kernel fork"
+arch="aarch64"
+_carch="arm64"
+_flavor="motorola-lake"
+url="https://kernel.org"
+license="GPL-2.0-only"
+options="!strip !check !tracedeps pmb:cross-native"
+makedepends="
+	bash
+	bc
+	bison
+	devicepkg-dev
+	findutils
+	flex
+	openssl-dev
+	perl
+"
+
+# Source
+_repository="android_kernel_motorola_msm8998"
+_commit="9e5ed655d949d54daae3aa9d6941e8bd70f4a0cb"
+_config="config-$_flavor.$arch"
+source="
+	$pkgname-$_commit.tar.gz::https://github.com/LineageOS/$_repository/archive/$_commit.tar.gz
+	$_config
+	remove-header-lkc.patch
+	f_fs_module_inittest.patch
+	f_hid_module_inittest.patch
+	fix-macro-declare_usb_function.patch
+"
+builddir="$srcdir/$_repository-$_commit"
+_outdir="out"
+
+prepare() {
+	default_prepare
+
+	# Remove -Werror from all makefiles
+	local i
+	local makefiles="$(find . -type f -name Makefile)
+		$(find . -type f -name Kbuild)"
+	for i in $makefiles; do
+		sed -i 's/-Werror-/-W/g' "$i"
+		sed -i 's/-Werror//g' "$i"
+	done
+
+	. downstreamkernel_prepare
+}
+
+build() {
+	unset LDFLAGS
+	make O="$_outdir" ARCH="$_carch" CC="${CC:-gcc}" \
+		KBUILD_BUILD_VERSION="$((pkgrel + 1 ))-postmarketOS"
+}
+
+package() {
+	downstreamkernel_package "$builddir" "$pkgdir" "$_carch" \
+		"$_flavor" "$_outdir"
+}
+
+sha512sums="
+da0d6f9dabc0d7b1304616730f16ee86f5493056fafab040b933becb7cd93bb2e52a7838f6f7454fb504e71872dec09155f5daaaa1fdfd3d60702ec0e7f60961  linux-motorola-lake-9e5ed655d949d54daae3aa9d6941e8bd70f4a0cb.tar.gz
+c4f9e313912dc0286e313b8a02ba1b723f253ead8f64f463ccb2cb390c5557cc03f5bd5b1b66e140ddbd8f2ef2e91ff1765b43e728f0202d58342474caeb24fc  config-motorola-lake.aarch64
+1872a4d9963f128965ab46b329d448e6b776d373cf99f2b8e11d025aa3e10a0308da19beb715c6bdced0b2c6ef44c47a5c013554a19787a64f8ac58d34bc912f  remove-header-lkc.patch
+bb9adbcd1df17f9197a9d66bacd0103164182ff3813a3b346128c88244135f40de3c3c7c6dd9391df47d9dccd5fd35ffcc248e0abae51214d09a2f5e7d960c31  f_fs_module_inittest.patch
+895f1eaf0fce84e8be8bc6fb6715b2e9a4bd121b7a99774c786a68eb96c55aff00e60aacfb3317c3fdc52e7363d646fc0556da0af252cc7bd84a9cc7544d1878  f_hid_module_inittest.patch
+8b3934e3c4115e81ac40a3c8022f3134cd89133f7569557ca857b4fd514078c4898b2ba3427986936d029874903711d04d7757d5a87bcb89137073128e51e8f5  fix-macro-declare_usb_function.patch
+"
